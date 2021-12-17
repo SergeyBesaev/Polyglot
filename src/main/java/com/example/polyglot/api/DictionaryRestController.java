@@ -51,5 +51,4 @@ public class DictionaryRestController {
         return ResponseEntity.ok(service.getRandomCatchPhrase());
     }
 
-
 }

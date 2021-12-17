@@ -21,6 +21,8 @@ public class DictionaryService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    List<DictionaryVerbDTO> listVerbDTO = entityManager.unwrap(Session.class).createCriteria(DictionaryVerbDTO.class).list();
+
     public List<DictionaryVerbDTO> getAllVerbs() {
         Session session = entityManager.unwrap(Session.class);
         List<DictionaryVerbDTO> list = session.createCriteria(DictionaryVerbDTO.class).list();
@@ -59,7 +61,5 @@ public class DictionaryService {
         int rnd = new Random().nextInt(list.size());
         return list.get(rnd);
     }
-
-
 
 }

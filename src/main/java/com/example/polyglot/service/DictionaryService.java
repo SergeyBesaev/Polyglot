@@ -60,6 +60,4 @@ public class DictionaryService {
         return list.get(rnd);
     }
 
-
-
 }

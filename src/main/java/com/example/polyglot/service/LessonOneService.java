@@ -10,26 +10,29 @@ import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Session;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
-public class LessonOneService {
+public class LessonOneService implements ILessonOneService {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public VerbTwoLanguageDTO getDTO() {
         VerbTwoLanguageDTO dto = new VerbTwoLanguageDTO();
-        Verb verb = getRandomVerb();
-        String form = getRandomFormOfVerb();
-        Pronoun pronoun = getRandomPronoun();
+        Verb verb = fetchRandomVerb();
+        String form = fetchRandomFormOfVerb();
+        Pronoun pronoun = fetchRandomPronoun();
 
         if (form.equals("FutureQuestion")) {
             dto.setEngForm("Will " + pronoun.getEngPronoun().toLowerCase() + " " + verb.getEngBase() + "?");
             switch (pronoun.getEngPronoun()) {
                 case "I":
                     dto.setRusForm("Я " + verb.getRusFutureI() + "?");
+                    dto.setEngForm("Will " + pronoun.getEngPronoun() + " " + verb.getEngBase() + "?");
                     return dto;
                 case "You":
                     dto.setRusForm("Ты " + verb.getRusFutureYou() + "?");
@@ -189,6 +192,7 @@ public class LessonOneService {
             switch (pronoun.getEngPronoun()) {
                 case "I":
                     dto.setRusForm("Я " + verb.getRusPastYouHeI() + "?");
+                    dto.setEngForm("Did " + pronoun.getEngPronoun() + " " + verb.getEngBase() + "?");
                     return dto;
                 case "You":
                     dto.setRusForm("Ты " + verb.getRusPastYouHeI() + "?");
@@ -257,11 +261,15 @@ public class LessonOneService {
         }
     }
 
-    private Verb getRandomVerb() {
-        Session session = entityManager.unwrap(Session.class);
+    public List<VerbTwoLanguageDTO> fetchListForLessonOne() {
+
+
+        return null;
+    }
+
+    private Verb fetchRandomVerb() {
         // Получаем список всех глаголов
-        List<Verb> list = session.createCriteria(Verb.class).list();
-        session.close();
+        List<Verb> list = fetchListAllVerbs();
 
         // Получаем случайное число, которое станет номером индекса
         int randomIndexList = new Random().nextInt(list.size());
@@ -270,7 +278,7 @@ public class LessonOneService {
         return list.get(randomIndexList);
     }
 
-    private String getRandomFormOfVerb() {
+    private String fetchRandomFormOfVerb() {
         // Создаем List из всех форм глагола
         List<VerbForms> list = new ArrayList<>(Arrays.asList(
               VerbForms.FutureQuestion,
@@ -290,17 +298,34 @@ public class LessonOneService {
         return list.get(randomIndexList).toString();
     }
 
-    private Pronoun getRandomPronoun() {
-        Session session = entityManager.unwrap(Session.class);
+    private Pronoun fetchRandomPronoun() {
         // Получаем список всех местоимений
-        List<Pronoun> list = session.createCriteria(Pronoun.class).list();
-        session.close();
+        List<Pronoun> list = fetchListAllPronouns();
 
-        // Получаем случайное число, которое станет номером индекса
         int randomIndexList = new Random().nextInt(list.size());
 
         // Возвращаем случайное местоимение
         return list.get(randomIndexList);
+    }
+
+    private List<Verb> fetchListAllVerbs() {
+        Session session = entityManager.unwrap(Session.class);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Verb> criteria = builder.createQuery(Verb.class);
+        criteria.from(Verb.class);
+        List<Verb> list = session.createQuery(criteria).getResultList();
+        session.close();
+        return list;
+    }
+
+    private List<Pronoun> fetchListAllPronouns() {
+        Session session = entityManager.unwrap(Session.class);
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Pronoun> criteria = builder.createQuery(Pronoun.class);
+        criteria.from(Pronoun.class);
+        List<Pronoun> list = session.createQuery(criteria).getResultList();
+        session.close();
+        return list;
     }
 
 }

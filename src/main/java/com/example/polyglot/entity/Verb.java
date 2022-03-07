@@ -1,5 +1,6 @@
 package com.example.polyglot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +14,12 @@ import javax.persistence.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "verbs")
 public class Verb {
 
     @Id
+    @JsonIgnore
     private int id;
 
     @Column(name = "engbase")

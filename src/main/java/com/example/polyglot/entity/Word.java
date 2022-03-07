@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SuperBuilder
 public class Word {
 
     private String eng;

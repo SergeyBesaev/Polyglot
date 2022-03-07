@@ -3,9 +3,7 @@ package com.example.polyglot.service;
 import com.example.polyglot.dto.DictionaryVerbDTO;
 import com.example.polyglot.entity.Catchphrase;
 import com.example.polyglot.entity.Noun;
-import javassist.bytecode.stackmap.BasicBlock;
 import org.hibernate.Session;
-import org.hibernate.persister.walking.internal.CompositionSingularSubAttributesHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +57,5 @@ public class DictionaryService {
         int rnd = new Random().nextInt(list.size());
         return list.get(rnd);
     }
-
-
 
 }
